@@ -1,11 +1,13 @@
 package com.z.p;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -25,11 +27,14 @@ public class MainActivity extends AppCompatActivity {
         rv = findViewById(R.id.rv);
         tabLayout = findViewById(R.id.tabLayout);
 
-        View bottomSheet = findViewById(R.id.bottom_sheet);
+        ScrollView bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheet.setNestedScrollingEnabled(false);
+        BottomSheetBehavior.from(bottomSheet);
+
         setUpTabs();
         setUpRV();
+
     }
 
     private void setUpTabs(){
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         gridLayoutManager.setAutoMeasureEnabled(true);
         rv.setLayoutManager(gridLayoutManager);
-        rv.setNestedScrollingEnabled(true);
+        //rv.setNestedScrollingEnabled(false);
         simpleAdapter = new SimpleAdapter(Extras.getImagesList());
         rv.setAdapter(simpleAdapter);
     }
