@@ -19,23 +19,41 @@
         app:layout_behavior="@string/bottom_sheet_behavior">
 
 
-        <LinearLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="10dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"/>
-        </LinearLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"/>
+
+
+            </LinearLayout>
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </ScrollView>
 

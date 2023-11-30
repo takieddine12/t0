@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -58,10 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private CoordinatorLayout mainLayout;
 
-    private ArrayList<ImageModel> arrayList;
-
-    private FirebaseDatabase firebaseDatabase;
-
+    private ProgressBar progressBar;
     private BitmapDao bitmapDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +69,19 @@ public class MainActivity extends AppCompatActivity {
         rv = findViewById(R.id.rv);
         tabLayout = findViewById(R.id.tabLayout);
         mainLayout = findViewById(R.id.mainLayout);
+        progressBar = findViewById(R.id.progressBar);
 
         ScrollView bottomSheet = findViewById(R.id.bottom_sheet);
         BottomSheetBehavior<?> mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheet.setNestedScrollingEnabled(false);
         BottomSheetBehavior.from(bottomSheet);
         increaseCursorSize();
-        arrayList = new ArrayList<>();
-        firebaseDatabase = FirebaseDatabase.getInstance();
         bitmapDao =  BitmapDatabase.getInstance(this).getBitmapDao();
         setUpTabs();
         setUpRV();
         startService();
+
+        progressBar.setVisibility(View.VISIBLE);
 
 
     }
@@ -129,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
         //getImageFromFB();
         getImagesFromDB();
 
+
+
     }
 
     private void getImagesFromDB(){
@@ -144,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(List<BitmapModel> bitmapModels) {
                        if(bitmapModels.size() >= 1){
+                           progressBar.setVisibility(View.GONE);
                            SimpleAdapter simpleAdapter = new SimpleAdapter(bitmapModels);
                            rv.setAdapter(simpleAdapter);
                            simpleAdapter.onClick(new SimpleAdapter.ImageListener() {
@@ -158,43 +160,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         Log.d("MainActivity TAG","Error throw " + e.getMessage());
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onComplete() {
-
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
-//    private void getImageFromFB(){
-//        firebaseDatabase.getReference()
-//                .child("Images")
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if(snapshot.exists()){
-//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-//                                ImageModel imageModel = dataSnapshot.getValue(ImageModel.class);
-//                                arrayList.add(imageModel);
-//                            }
-//                            SimpleAdapter simpleAdapter = new SimpleAdapter(arrayList);
-//                            rv.setAdapter(simpleAdapter);
-//                            simpleAdapter.onClick(new SimpleAdapter.ImageListener() {
-//                                @Override
-//                                public void onImageSelected(String image) {
-//
-//                                }
-//                            });
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        Log.d("TAG","Error getting images " + error.getMessage());
-//                    }
-//                });
-//    }
+
     private void startService(){
         Intent intent = new Intent(this, BitmapService.class);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -203,5 +178,6 @@ public class MainActivity extends AppCompatActivity {
             startService(intent);
         }
     }
+    
 
 }
